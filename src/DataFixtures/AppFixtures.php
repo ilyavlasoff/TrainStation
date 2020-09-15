@@ -134,7 +134,7 @@ class AppFixtures extends Fixture
             $voyage->setTrain($trains[array_rand($trains)]);
             $voyage->setName("Voyage demo name N$i");
             $voyage->setDepartmentDate(
-                \DateTime::createFromFormat('j-M-Y', '15-Feb-2009'));
+                \DateTime::createFromFormat('j-M-Y', '16-Sep-2020'));
 
             $voyages[] = $voyage;
             $manager->persist($voyage);

@@ -1,4 +1,4 @@
-body {
+/*body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
 }
@@ -24,9 +24,9 @@ body {
 .flex {
     display: flex;
 }
-/*
+
 Orders history page
- */
+
 .flex-cent-col {
     flex-direction: column;
     align-items: center;
@@ -88,9 +88,9 @@ Orders history page
 .order-list-item + .order-list-item {
     margin-top: 20px;
 }
-/*
+
 Order full information page
- */
+
 .action-message {
     background-color: blueviolet;
 }
@@ -112,4 +112,8 @@ Order full information page
 
 .module-data > .btn {
     margin-left: auto;
+}*/
+
+.content {
+    min-height: 1000px;
 }

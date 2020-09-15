@@ -114,6 +114,9 @@
     "ocramius/proxy-manager": {
         "version": "2.9.1"
     },
+    "php": {
+        "version": "7.2"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -377,5 +380,11 @@
     },
     "webimpress/safe-writer": {
         "version": "2.1.0"
+    },
+    "zendframework/zend-code": {
+        "version": "3.4.1"
+    },
+    "zendframework/zend-eventmanager": {
+        "version": "3.2.1"
     }
 }
