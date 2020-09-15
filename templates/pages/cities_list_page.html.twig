@@ -1,0 +1,38 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">Поиск городов</h1>
+            <p class="page-title-secondary-text">В данный момент мы обслуживаем {{ cityCount }} городов</p>
+            {{ form_start(citySearchForm) }}
+                <div class="form-inline">
+                    {{ form_widget(citySearchForm.query, {'attr': {'class': 'form-control', 'placeholder': 'Введите название'}}) }}
+                    {{ form_widget(citySearchForm.find, {'attr': {'class': 'btn btn-primary'}}) }}
+                </div>
+            {{ form_end(citySearchForm) }}
+        </div>
+        {% if cities | length  %}
+            <div class="flex list-items-container">
+                {% for city in cities %}
+                    <div class="flex order-list-item">
+                        <div class="order-text-props-container">
+                            <h5 class="list-item-main-text">{{ city.id }}</h5>
+                            <ul class="list-item-props">
+                                <li>Адрес: {{ city.address }}</li>
+                                <li>Телефон: {{ city.phone }}</li>
+                            </ul>
+                        </div>
+                        <div class="flex list-items-operations-block">
+                            <button class="btn btn-primary list-item-btn view-full-order-btn" data-order-id="{{ city.id }}">Построить маршрут <br>до точки</button>
+                            <button class="btn btn-primary list-item-btn view-full-order-btn" data-order-id="{{ city.id }}">Построить маршрут <br>из точки</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h3>Ничего не найдено</h3>
+            <p>Попробуйте изменить поисковый запрос</p>
+        {% endif %}
+    </div>
+{% endblock %}

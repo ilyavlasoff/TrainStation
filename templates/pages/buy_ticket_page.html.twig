@@ -1,0 +1,104 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <h1>Введите пункт отправления и пункт назначения</h1>
+    <select id="source-select">
+        {% for availableStation in availableStations %}
+            <option value="{{ availableStation.id }}">{{ availableStation.address }}</option>
+        {% endfor %}
+    </select>
+    <select id="dest-select">
+        {% for availableStation in availableStations %}
+            <option value="{{ availableStation.id }}">{{ availableStation.address }}</option>
+        {% endfor %}
+    </select>
+    <input type="date" id="trip-date">
+    <button type="button" id="find-button">Найти</button>
+    <div id="founded-items-container"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let source = $('#source-select');
+        let destination = $('#dest-select');
+        let tripDate = $('#trip-date');
+        let findButton = $('#find-button');
+        let foundedItemsContainer = $('#founded-items-container');
+
+        $(document).ready(function () {
+            let now = new Date();
+            let day = ("0" + now.getDate()).slice(-2);
+            let month = ("0" + (now.getMonth() + 1)).slice(-2);
+            let today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+            tripDate.val(today);
+            findButton.click(function () {
+                loadAvailableTickets();
+            });
+            $('.choose-trip-btn').click(function () {
+                let voyageId = $(this).attr('data-voyage-id');
+                getTicketsOfVoyage(voyageId);
+            });
+        });
+
+        function loadAvailableTickets() {
+            let dump = {
+                1: source.val(),
+                2: destination.val(),
+                3:tripDate.val()
+            }
+            $.ajax({
+                method: 'POST',
+                url: '{{ path('find_ticket_options') }}',
+                data: {
+                    from: source.val(),
+                    to: destination.val(),
+                    date: tripDate.val()
+                },
+                success: function (rawData, code) {
+                    let data = JSON.parse(rawData);
+                    if (data.success) {
+                        let values = data.data;
+                        foundedItemsContainer.empty();
+                        if(!values.length) {
+                            foundedItemsContainer.append($('<h3>').text('Ничего не найдено'));
+                        }
+                        else {
+                            for (let item of values) {
+                                let departmentDate = new Date(item.departmentDate.date);
+                                let dDay = ('0' + departmentDate.getDate()).slice(-2);
+                                let dMonth = ('0' + departmentDate.getMonth()).slice(-2);
+                                let dYear = departmentDate.getFullYear();
+                                let dHour = ('0' + departmentDate.getHours()).slice(-2);
+                                let dMinutes = ('0' + departmentDate.getMinutes()).slice(-2);
+                                let departmentStringDate = `${dDay}.${dMonth}.${dYear} ${dHour}:${dMinutes}`;
+                                let trainRoute = item.route;
+                                let voyageId = item.voyageId;
+                                let trainType = item.trainType;
+                                let voyageName = item.name;
+                                $('<div>')
+                                    .attr('class', '')
+                                    .append($('<h4>').text(trainRoute).attr('class', ''))
+                                    .append($('<p>').text(`Дата отправления: ${departmentStringDate}`).attr('class', ''))
+                                    .append($('<p>').text(`Тип поезда: ${trainType}`).attr('class', ''))
+                                    .append($('<p>').text(`Наименование поездки: ${voyageName}`).attr('class', ''))
+                                    .append($('<button>').text('Выбрать').attr('class', 'choose-trip-btn btn btn-sm').attr('data-voyage-id', voyageId))
+                                    .appendTo(foundedItemsContainer);
+                            }
+                            $('.choose-trip-btn').click(function () {
+                                location.href = '/buy?voyage=' + $(this).attr('data-voyage-id');
+                            });
+                        }
+                    }
+                },
+                error: function (rawData, error) {
+                    let data = JSON.parse(rawData);
+                    console.log(data);
+                }
+            })
+        }
+
+        function getTicketsOfVoyage(voyageId) {
+
+        }
+    </script>
+{% endblock %}

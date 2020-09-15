@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <div>
+            <div class="header">
+                <div class="header-content">
+                    {% if not app.user %}
+                    <ul class="nav nav-pills mb-5">
+                        <li class="nav-item ml-auto">
+                            <a href="{{ path('app_register') }}" target="_self" class="nav-link active">Регистрация</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                            <a href="{{ path('app_login') }}" target="_self" class="nav-link">Вход</a>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <ul class="nav nav-pills mb-5">
+                        <li class="nav-item">
+                            <a href="{{ path('app_home') }}" class="nav-link active">Домой</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('buy_ticket') }}" class="nav-link">Купить билет</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Маршруты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('city_search_page') }}" class="nav-link">Города</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Рейсы</a>
+                        </li>
+                        <li class="nav-item dropdown ml-auto">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ app.user.name }}</a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="{{ path('user_personal_page') }}" class="dropdown-item">Моя страница</a>
+                                <a href="{{ path('user_personal_trips') }}" class="dropdown-item">Мои поездки</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ path('app_logout') }}" class="dropdown-item">Выйти</a>
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="content">{% block page_content %}{% endblock %}</div>
+            <div class="footer">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

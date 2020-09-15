@@ -1,0 +1,76 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">Изменить данные</h1>
+            <p class="page-title-secondary-text">Вы вошли как {{ app.user. name ~ ' ' ~ app.user.surname }}</p>
+        </div>
+        {% if message is defined %}
+            <div class="action-message"><p>{{ message }}</p></div>
+        {% endif %}
+    <div class="flex list-items-container">
+        <div>
+            <h3>Персональные данные</h3>
+            {{ form_start(personalDataForm) }}
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        {{ form_row(personalDataForm.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(personalDataForm.name, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(personalDataForm.surname, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(personalDataForm.patronymic, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(personalDataForm.passportData, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(personalDataForm.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(personalDataForm) }}
+        </div>
+
+        <div>
+            <h3>Персональные данные</h3>
+            {{ form_start(passwordRestorationForm) }}
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(passwordRestorationForm.oldPassword, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(passwordRestorationForm.password.first, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(passwordRestorationForm.password.second, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    {{ form_row(passwordRestorationForm.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                </div>
+            </div>
+            {{ form_end(passwordRestorationForm) }}
+        </div>
+    </div>
+    </div>
+{% endblock %}

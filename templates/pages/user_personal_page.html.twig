@@ -1,0 +1,36 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">{{ app.user.surname }} {{ app.user.name }}</h1>
+            <p class="page-title-secondary-text"><p>При обращении в техническую поддержку используйте идентификатор аккаунта {{ app.user.id }}</p></p>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    <div class="flex flex-cent-col">
+        <div class="module-container">
+            <h1 class="module-title">Персональные данные</h1>
+            <div class="module-data">
+                <ul>
+                    <li>Фамилия: {{ app.user.surname }}</li>
+                    <li>Имя: {{ app.user.name }}</li>
+                    <li>Отчество: {{ app.user.patronymic | default('не указано') }}</li>
+                    <li>Паспортные данные: {{ app.user.passportData }}</li>
+
+                    {% if benefits | length %}
+                        <li>Льготы: {{ benefits | join(',') }}</li>
+                    {% else %}
+                        <li>Нет льгот</li>
+                    {% endif %}
+
+                    <li>Количество бонусов: {{ bonuses | default(0) }}</li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="location.href = '{{ path('edit_personal_data') }}'">Изменить</button>
+        </div>
+    </div>
+
+{% endblock %}

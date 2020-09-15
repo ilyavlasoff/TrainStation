@@ -1,0 +1,38 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">Ваши заказы</h1>
+            <p class="page-title-secondary-text">Всего заказов: {{ ordersInfo | length }}</p>
+        </div>
+        <div class="flex list-items-container">
+            {% for orderInfo in ordersInfo %}
+                <div class="flex order-list-item">
+                    <div class="order-text-props-container">
+                        <h5 class="list-item-main-text">{{ orderInfo.name }}</h5>
+                        <ul class="list-item-props">
+                            <li>Статус: </li>
+                            <li>Дата отправления: {{ orderInfo.departmentDate | date('Y-m-d') }}</li>
+                            <li>Маршрут: {{ orderInfo.route }}</li>
+                        </ul>
+                    </div>
+                    <div class="flex list-items-operations-block">
+                        <button class="btn btn-primary list-item-btn view-full-order-btn" data-order-id="{{ orderInfo.id }}">Просмотр</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.view-full-order-btn').click(function () {
+                let orderId = $(this).attr('data-order-id');
+                document.location.href ='/ticket/' + orderId;
+            });
+        });
+    </script>
+{% endblock %}

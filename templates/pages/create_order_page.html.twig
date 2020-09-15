@@ -1,0 +1,124 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">Заказ билета</h1>
+            <p class="page-title-secondary-text">Вы вошли как {{ app.user. name ~ ' ' ~ app.user.surname }}</p>
+        </div>
+        <div class="flex list-items-container">
+            <div>
+                <h3>Информация о пассажире</h3>
+                <ul>
+                    <li>Фамилия: {{ app.user.surname }}</li>
+                    <li>Имя: {{ app.user.name }}</li>
+                    <li>Отчество: {{ app.user.patronymic }}</li>
+                    <li>Паспортные данные: {{ app.user.passportData }}</li>
+                    <li>E-mail: {{ app.user.email }}</li>
+                </ul>
+                <div>
+                    <p>Пожалуйста, проверьте актуальность предоставленной информации, при необходимости редайтируйте</p>
+                    <button type="button" class="btn ptn-secondary">Редактировать</button>
+                </div>
+            </div>
+
+            <div>
+                <h3>Данные о поездке</h3>
+                <ul>
+                    <li>Номер отправления: {{ voyage.id }}</li>
+                    <li>Наименование отправления: {{ voyage.name }}</li>
+                    <li>Наименование маршрута: {{ voyage.train.route }}</li>
+                    <li>Количество вагонов: {{ voyage.train.wagons | length }}</li>
+                    <li>Маршрут следования: <button type="button">Открыть</button>
+                        <br>
+                        <p></p>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>Параметры</h3>
+                <div>
+                    {{ form_start(ticketInformationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.wagonType, {'attr': {'class': 'form-control wagon-type-selector', 'data-train-id': voyage.train.id}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.sourceStation, {'attr': {'class': 'form-control wagon-type-selector', 'data-train-id': voyage.train.id}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.destinationStation, {'attr': {'class': 'form-control wagon-type-selector', 'data-train-id': voyage.train.id}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.wagonNumber, {'attr': {'class': 'form-control wagon-num-selector'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.bonusesToCheckout, {'attr': {'class': 'form-control', 'data-max-count': maxBonuses, 'value': 0}}) }}
+                            <p>Максимальное количество бонусов для списания: {{ maxBonuses }}</p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.checkoutMethod, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form_row(ticketInformationForm.submit, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(ticketInformationForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let wagonTypeSelector = $('.wagon-type-selector');
+        let wagonNumberSelector = $('.wagon-num-selector');
+
+        $(document).ready(function () {
+            loadAvailableWagons.call(wagonTypeSelector);
+        });
+
+        wagonTypeSelector.change(function () {
+            loadAvailableWagons.call(this);
+        });
+
+        function loadAvailableWagons() {
+            let trainId = $(this).attr('data-train-id');
+            let selectedWagonType = $(this).val();
+
+            $.ajax({
+                method : 'POST',
+                url: '{{ path('get_available_trains') }}',
+                data: {
+                    type : selectedWagonType,
+                    train: trainId
+                },
+                success: function (rawData, status) {
+                    let data = JSON.parse(rawData);
+                    wagonNumberSelector.empty();
+                    for(item of data.data) {
+                        wagonNumberSelector.append($('<option></option>').attr('value', item.id).text(item.id));
+                    }
+                },
+                error: function (rawData) {
+                    let resp = JSON.parse(rawData);
+                    console.log(resp.error);
+                }
+            })
+        }
+    </script>
+{% endblock %}

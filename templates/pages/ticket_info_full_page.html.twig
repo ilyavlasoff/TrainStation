@@ -1,0 +1,22 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_content %}
+    <div class="flex flex-cent-col">
+        <div class="page-title-container">
+            <h1 class="page-title-text">Информация о билете</h1>
+            <p class="page-title-secondary-text">Идентификатор билета: {{ ticket.id }}</p>
+        </div>
+        <div>
+            <div>
+                <p>Станция отправления: {{ ticket.sourceStation.address }}</p>
+                <p>Станция назначения: {{ ticket.destinationStation.address }}</p>
+                <p>Протяженность пути: {{ ticket.routeLength }}</p>
+            </div>
+            <div>
+                <p>Идентификатор поезда: {{ train.id }}</p>
+                <p>Тип поезда: {{ train.trainType }}</p>
+                <p>Время отправления: {{ voyage.departmentDate | date('Y-m-d') }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,115 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+}
+
+.header {
+    background-color: #f5f5f6;
+    min-height: 80px;
+}
+
+.header-content {
+    padding: 20px 20px;
+    height: 80px;
+}
+
+.content {
+    width: 80%;
+    margin: auto;
+}
+
+.footer {
+
+}
+.flex {
+    display: flex;
+}
+/*
+Orders history page
+ */
+.flex-cent-col {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.flex-row {
+    flex-direction: row;
+}
+.page-title-text {
+    font-size: 46px;
+    color: #37474f;
+}
+.page-title-secondary-text {
+    font-size: 14px;
+    color: #546e7a;
+}
+.page-title-container {
+    margin-top: 40px;
+    text-align: center;
+}
+.list-items-container {
+    margin-top: 70px;
+    width: 80%;
+    flex-direction: column;
+}
+.order-list-item {
+    min-width: 300px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #cfd8dc;
+    padding: 20px;
+    flex-direction: row;
+}
+.order-text-props-container {
+    flex-direction: column;
+}
+.list-items-operations-block {
+    margin-left: auto;
+    align-items: flex-end;
+    flex-direction: column;
+}
+.list-item-main-text {
+    font-size: 30px;
+    color: #455a64;
+}
+.list-item-props {
+    list-style: none;
+    padding-left: 5px;
+}
+.list-item-props > li {
+    color: #546e7a;
+    font-size: 16px;
+}
+.list-item-props > li + .list-item-props > li {
+}
+.list-item-btn + .list-item-btn {
+    margin-top: 10px;
+}
+.order-list-item + .order-list-item {
+    margin-top: 20px;
+}
+/*
+Order full information page
+ */
+.action-message {
+    background-color: blueviolet;
+}
+.module-container {
+    background-color: #eceff1;
+    padding: 10px 20px;
+    border-radius: 7px;
+    margin-top: 40px;
+    width: 100%;
+}
+.module-title {
+    font-size: 24px;
+    color: #37474f;
+    text-align: center;
+}
+.module-data > ul{
+    list-style-type: none;
+}
+
+.module-data > .btn {
+    margin-left: auto;
+}
