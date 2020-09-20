@@ -121,9 +121,10 @@ class BuyTicketController extends AbstractController {
             $ticket->setVoyage($voyage);
             $ticket->setPlace(101);
 
-            $manager = $this->getDoctrine()->getManager();
+            var_dump($formData);
+            /*$manager = $this->getDoctrine()->getManager();
             $manager->persist($ticket);
-            $manager->flush();
+            $manager->flush();*/
         }
 
         /** @var User $user */

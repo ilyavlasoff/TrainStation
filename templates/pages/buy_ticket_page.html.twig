@@ -96,12 +96,16 @@
                                 let trainType = item.trainType;
                                 let voyageName = item.name;
                                 $('<div>')
-                                    .attr('class', '')
-                                    .append($('<h4>').text(trainRoute).attr('class', ''))
-                                    .append($('<p>').text(`Дата отправления: ${departmentStringDate}`).attr('class', ''))
-                                    .append($('<p>').text(`Тип поезда: ${trainType}`).attr('class', ''))
-                                    .append($('<p>').text(`Наименование поездки: ${voyageName}`).attr('class', ''))
-                                    .append($('<button>').text('Выбрать').attr('class', 'choose-trip-btn btn btn-sm').attr('data-voyage-id', voyageId))
+                                    .attr('class', 'card mb-2')
+                                    .append(
+                                        $('<div>')
+                                            .attr('class', 'card-body')
+                                            .append($('<h4>').text(trainRoute).attr('class', ''))
+                                            .append($('<p>').text(`Дата отправления: ${departmentStringDate}`).attr('class', ''))
+                                            .append($('<p>').text(`Тип поезда: ${trainType}`).attr('class', ''))
+                                            .append($('<p>').text(`Наименование поездки: ${voyageName}`).attr('class', ''))
+                                            .append($('<button>').text('Выбрать').attr('class', 'choose-trip-btn btn btn-sm btn-dark').attr('data-voyage-id', voyageId))
+                                    )
                                     .appendTo(foundedItemsContainer);
                             }
                             $('.choose-trip-btn').click(function () {

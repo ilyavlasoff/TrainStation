@@ -40,25 +40,20 @@ class OrderCreationForm extends AbstractType {
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Создать заказ'
-            ])
-            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
-                $form = $event->getForm();
-                $val = $form->get('wagonNumber')->getData();
-                $options = $form->get('wagonNumber')->getConfig()->getOptions();
-                $options['choices'][$val] = 'Value';
-                $form->remove('wagonNumber');
-                $form->add('wagonNumber', ChoiceType::class, $options);
-            });
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => false,
             'wagonTypes' => null,
             'paymentTypes' => null,
             'csrf_protection' => false,
-            'stationsOptions' => null
+            'stationsOptions' => null,
+            'wagonNumber' => null
+        ]);
+        $resolver->setDefaults([
+            'validation_groups' => false,
         ]);
     }
 }
