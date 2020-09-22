@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Monitoring;
+use App\Entity\Train;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +19,28 @@ class MonitoringRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Monitoring::class);
+    }
+
+    public function getMonitoringHistory($train = null, \DateTime $dateTime = null, int $count = 10) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('m')
+            ->from('App\Entity\Train', 'tr')
+            ->join('App\Entity\Monitoring', 'm', Join::WITH, 'tr.id = m.train')
+            ->orderBy('m.time', 'DESC');
+        if ($train) {
+            $qb->andWhere('tr.id = :train')->setParameter('train', $train->getId());
+        }
+        if($dateTime) {
+            $qb->andWhere($this->getEntityManager()->createQueryBuilder()->expr()->between('m.time', ':timeStart', ':timeEnd'))
+                ->setParameter('timeStart', $dateTime->format('Y-m-d 00:00'))
+                ->setParameter('timeEnd', $dateTime->format('Y-m-d 23:59'));
+        }
+        if ($count) {
+            $qb->setMaxResults($count);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     // /**

@@ -1,0 +1,35 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_title %}Заказ подтвержден{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Номер билета {{ ticket.id }}</h5>
+                        <div class="card-text">
+                            <p>Информация о билете:</p>
+                            <ul>
+                                <li>Пассажир: {{ ticket.user.name ~ ' ' ~ ticket.user.surname ~ ' ' ~ ticket.user.patronymic }}</li>
+                                <li>Цена: {{ ticket.price }}</li>
+                                <li>Поездка: {{ ticket.voyage.name }}</li>
+                                <li>Маршрут: {{ ticket.voyage.train.route }}</li>
+                                <li>Станция посадки: {{ ticket.sourceStation.address }}</li>
+                                <li>Станция назначения: {{ ticket.destinationStation.address }}</li>
+                                <li>Вагон: {{ ticket.wagon.id }}</li>
+                                <li>Место: {{ ticket.place }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    {{ form_start(form) }}
+                    {{ form_row(form.redirect, {'attr': {'class': 'btn btn-lg btn-dark mb-5 mt-5'}}) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

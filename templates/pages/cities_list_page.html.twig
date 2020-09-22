@@ -1,38 +1,42 @@
 {% extends 'pages_template.html.twig' %}
 
+{% block page_title %}Поиск городов{% endblock %}
 {% block page_content %}
-    <div class="flex flex-cent-col">
-        <div class="page-title-container">
-            <h1 class="page-title-text">Поиск городов</h1>
-            <p class="page-title-secondary-text">В данный момент мы обслуживаем {{ cityCount }} городов</p>
-            {{ form_start(citySearchForm) }}
-                <div class="form-inline">
-                    {{ form_widget(citySearchForm.query, {'attr': {'class': 'form-control', 'placeholder': 'Введите название'}}) }}
-                    {{ form_widget(citySearchForm.find, {'attr': {'class': 'btn btn-primary'}}) }}
-                </div>
-            {{ form_end(citySearchForm) }}
-        </div>
-        {% if cities | length  %}
-            <div class="flex list-items-container">
-                {% for city in cities %}
-                    <div class="flex order-list-item">
-                        <div class="order-text-props-container">
-                            <h5 class="list-item-main-text">{{ city.id }}</h5>
-                            <ul class="list-item-props">
-                                <li>Адрес: {{ city.address }}</li>
-                                <li>Телефон: {{ city.phone }}</li>
-                            </ul>
-                        </div>
-                        <div class="flex list-items-operations-block">
-                            <button class="btn btn-primary list-item-btn view-full-order-btn" data-order-id="{{ city.id }}">Построить маршрут <br>до точки</button>
-                            <button class="btn btn-primary list-item-btn view-full-order-btn" data-order-id="{{ city.id }}">Построить маршрут <br>из точки</button>
-                        </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <p class="text-center">В данный момент мы обслуживаем {{ cityCount }} городов</p>
+                {{ form_start(citySearchForm) }}
+                <div class="row justify-content-center">
+                    <div class="form-inline">
+                        {{ form_widget(citySearchForm.query, {'attr': {'class': 'form-control mr-3', 'placeholder': 'Введите название'}}) }}
+                        {{ form_widget(citySearchForm.find, {'attr': {'class': 'btn btn-dark'}}) }}
                     </div>
-                {% endfor %}
+                </div>
+                {{ form_end(citySearchForm) }}
             </div>
-        {% else %}
-            <h3>Ничего не найдено</h3>
-            <p>Попробуйте изменить поисковый запрос</p>
-        {% endif %}
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                {% if cities | length  %}
+                    {% for city in cities %}
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ city.address }}</h5>
+                                <ul class="card-text">
+                                    <li>Адрес: {{ city.address }}</li>
+                                    <li>Телефон: {{ city.phone }}</li>
+                                </ul>
+                                <a class="card-link" href="{{ path('buy_ticket', {'to': city.id}) }}">Построить маршрут до точки</a>
+                                <a class="card-link" href="{{ path('buy_ticket', {'from': city.id}) }}">Построить маршрут из точки</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h3 class="text-center mt-3 mb-4">Ничего не найдено</h3>
+                    <p  class="text-center mb-4">Попробуйте изменить поисковый запрос</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}

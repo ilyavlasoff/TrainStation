@@ -1,0 +1,50 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_title %}Управление рейсами{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <p class="text-center">Добавить рейс</p>
+                <div class="row justify-content-center">
+                    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+                        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-dark btn-lg'}}) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5 mb-5">
+
+            <div class="col-8">
+                {% if voyages | length %}
+                    <p class="text-center mb-3">Найдено результатов: {{ voyages | length }}</p>
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Маршрут</th>
+                            <th scope="col">Дата отправления</th>
+                            <th scope="col">Тип поезда</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for voyage in voyages %}
+                            <tr>
+                                <th scope="row">{{ voyage.id }}</th>
+                                <td>{{ voyage.name }}</td>
+                                <td>{{ voyage.train.route }}</td>
+                                <td>{{ voyage.departmentDate | date('Y-m-d') }}</td>
+                                <td>{{ voyage.train.trainType }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h3 class="text-center">Ничего не найдено</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

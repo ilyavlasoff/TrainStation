@@ -1,0 +1,41 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_title %}Доступные маршруты{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                {% for train in trains %}
+                    <div class="card mt-3 mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ train.route }}</h5>
+                            <p>Наименование поезда: {{ train.route }}</p>
+                            <p>Вагонов: {{ train.wagons | length }}</p>
+                            <p>Поездок: {{ train.voyages | length }}</p>
+                            <a class="card-link">Показать полный маршрут</a>
+                            <div class="full-route">
+                                <ul>
+                                    {% for item in train.wayThrough %}
+                                        <li>{{ item.station.address }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.card-link').parent().children('.full-route').hide();
+            $('.card-link').click(function () {
+                $(this).parent().children('.full-route').slideToggle();
+            });
+        });
+    </script>
+{% endblock %}

@@ -18,9 +18,21 @@ class PersonalPageController extends AbstractController {
      * @Route("/personal", name="user_personal_page")
      */
     public function displayPersonalUserPage() {
+        /** @var User $user */
+        $user = $this->getUser();
+        $bonuses = $user->getBonuses();
+        $bonusesCount = 0;
+        if($bonuses) {
+            $bonusesCount = $bonuses->getQuantity();
+        }
+        /** @var TicketRepository $ticketRepos */
+        $ticketRepos = $this->getDoctrine()->getRepository(Ticket::class);
+        $lastTicketList = $ticketRepos->getLastOrdersForUser($user);
+
         return $this->render('pages/user_personal_page.html.twig', [
             'benefits' => [],
-            'bonuses' => 100
+            'bonuses' => $bonusesCount,
+            'ordersInfo' => $lastTicketList
         ]);
     }
 

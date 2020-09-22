@@ -11,15 +11,19 @@ use App\Entity\Voyage;
 use App\Entity\Wagon;
 use App\Entity\WagonType;
 use App\Form\OrderCreationForm;
+use App\Form\VoyagesSearchForm;
+use App\Repository\StationRepository;
+use App\Repository\TicketRepository;
 use App\Repository\TrainRepository;
 use App\Repository\VoyageRepository;
 use App\Repository\WagonRepository;
-use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,10 +34,39 @@ class BuyTicketController extends AbstractController {
     /**
      * @Route("/find-voyages", name="buy_ticket")
      */
-    public function displayFindTicketPage() {
+    public function displayFindTicketPage(Request $request) {
+
+        /** @var Station[] $availableStations */
         $availableStations = $this->getDoctrine()->getRepository(Station::class)->findAll();
+        $stations = [];
+        foreach ($availableStations as $availableStation) {
+            $stations[$availableStation->getAddress()] = $availableStation->getId();
+        }
+
+        $form = $this->createForm(VoyagesSearchForm::class, null, [
+            'stations' => $stations
+        ]);
+        /** @var StationRepository $stationRepos */
+        $stationRepos = $this->getDoctrine()->getRepository(Station::class);
+        $sourceStationId = $request->query->get('from');
+        if ($sourceStationId) {
+            $sourceStation = $stationRepos->find($sourceStationId);
+            if ($sourceStation) {
+                $form->get('source')->setData($sourceStation->getId());
+            }
+        }
+        $destinationStationId = $request->query->get('to');
+        if ($destinationStationId) {
+            $destinationStation = $stationRepos->find($destinationStationId);
+            if ($destinationStation) {
+                $form->get('destination')->setData($destinationStation->getId());
+            }
+        }
+        $form->get('date')->setData(new \DateTime('now'));
+
         return $this->render('pages/buy_ticket_page.html.twig', [
-            'availableStations' => $availableStations
+            'availableStations' => $availableStations,
+            'form' => $form->createView()
         ]);
     }
 
@@ -80,14 +113,16 @@ class BuyTicketController extends AbstractController {
         ]);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+
             $formData = $form->getData();
 
             /** @var Ticket $ticket */
             $ticket = new Ticket();
 
+            $wagonNumber = $formData['wagonNumber'];
             /** @var Wagon $wagon */
-            $wagon = $this->getDoctrine()->getRepository(Wagon::class)->find(12);
+            $wagon = $this->getDoctrine()->getRepository(Wagon::class)->find($wagonNumber);
             $ticket->setWagon($wagon);
 
             $wagonTypeRepos = $this->getDoctrine()->getRepository(WagonType::class);
@@ -119,22 +154,57 @@ class BuyTicketController extends AbstractController {
             $ticket->setDestinationStation($destinationStation);
 
             $ticket->setVoyage($voyage);
-            $ticket->setPlace(101);
+            /** @var TicketRepository $ticketRepos */
+            $ticketRepos = $this->getDoctrine()->getRepository(Ticket::class);
+            $ticket->setPlace($ticketRepos->getNextTicketNumberInTrip($voyage, $wagon));
 
-            var_dump($formData);
-            /*$manager = $this->getDoctrine()->getManager();
+            $manager = $this->getDoctrine()->getManager();
             $manager->persist($ticket);
-            $manager->flush();*/
+            $manager->flush();
+
+            return new RedirectResponse($this->generateUrl('order_creation_success', ['id' => $ticket->getId()]));
         }
 
         /** @var User $user */
         $user = $this->getUser();
-        $maxBonusesCount = $user->getBonuses()->getQuantity();
+        $maxBonusesCount =  0;
+        if ($bonuses = $user->getBonuses()) {
+            $maxBonusesCount = $bonuses->getQuantity();
+        }
 
         return $this->render('pages/create_order_page.html.twig', [
             'ticketInformationForm' => $form->createView(),
             'voyage' => $voyage,
             'maxBonuses' => $maxBonusesCount
+        ]);
+    }
+
+    /**
+     * @Route("/order-confirm/{id}", name="order_creation_success")
+     */
+    public function orderConfirmation(string $id) {
+        /** @var TicketRepository $ticketRepository */
+        $ticketRepository = $this->getDoctrine()->getRepository(Ticket::class);
+        /** @var Ticket $ticket */
+        $ticket = $ticketRepository->find($id);
+
+        if (! $ticket) {
+            throw new \Exception('Not found');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('redirect', SubmitType::class, [
+                'label' => 'Вернуться на главную'
+            ])
+            ->getForm();
+
+        if ($form->isSubmitted()) {
+            return new RedirectResponse($this->generateUrl('app_home'));
+        }
+
+        return $this->render('pages/order_confirmation.html.twig', [
+            'ticket' => $ticket,
+            'form' => $form->createView()
         ]);
     }
 

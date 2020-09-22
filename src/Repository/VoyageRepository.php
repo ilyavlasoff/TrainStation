@@ -57,4 +57,15 @@ class VoyageRepository extends ServiceEntityRepository
             return $availableVoyages;
     }
 
+    public function getVoyagesList(\DateTime $dateTime) {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('v')
+            ->from('App\Entity\Voyage', 'v')
+            ->where($this->getEntityManager()->createQueryBuilder()->expr()->between('v.departmentDate', ':timeStart', ':timeEnd'))
+            ->orderBy('v.departmentDate', 'ASC')
+            ->setParameter('timeStart', $dateTime->format('Y-m-d 00:00'))
+            ->setParameter('timeEnd', $dateTime->format('Y-m-d 23:59'))
+            ->getQuery()->getResult();
+    }
+
 }

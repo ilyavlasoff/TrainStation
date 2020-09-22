@@ -14,19 +14,27 @@
                             <a href="{{ path('buy_ticket') }}" class="nav-link">Купить билет</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Маршруты</a>
+                            <a href="{{ path('routes_list') }}" class="nav-link">Маршруты</a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ path('city_search_page') }}" class="nav-link">Города</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Рейсы</a>
+                            <a href="{{ path('voyages_list') }}" class="nav-link">Рейсы</a>
                         </li>
+                        {% if is_granted('ROLE_EMPLOYEE') %}
+                            <li class="nav-item">
+                                <a href="{{ path('monitoring_list') }}" class="nav-link">Мониторинг</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('emp_voyage_list') }}" class="nav-link">Редактор рейсов</a>
+                            </li>
+                        {% endif %}
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         {% if app.user %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Мои заказы</a>
+                                <a class="nav-link" href="{{ path('user_personal_trips') }}">Мои заказы</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

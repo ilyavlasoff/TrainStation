@@ -1,0 +1,23 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_title %}Добавление мониторинга{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="card mt-5 mb-5">
+                    <div class="card-body">
+                        <h5 class="card-title">Новый мониторинг</h5>
+                        {{ form_start(form) }}
+                        {{ form_row(form.location, {'attr': {'class': 'form-control mt-3'}}) }}
+                        {{ form_row(form.time, {'attr': {'class': ''}}) }}
+                        {{ form_row(form.train, {'attr': {'class': 'form-control mt-3'}}) }}
+                        {{ form_row(form.submit, {'attr': {'class': 'btn btn-lg btn-dark mt-3'}}) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

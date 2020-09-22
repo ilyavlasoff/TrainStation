@@ -6,29 +6,20 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-6">
-                <div class="form-group">
-                    <label for="source-select">Место отправления</label>
-                    <select id="source-select" class="form-control">
-                        {% for availableStation in availableStations %}
-                            <option value="{{ availableStation.id }}">{{ availableStation.address }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="dest-select">Место назначения</label>
-                    <select id="dest-select" class="form-control">
-                        {% for availableStation in availableStations %}
-                            <option value="{{ availableStation.id }}">{{ availableStation.address }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="trip-date">Место назначения</label>
-                    <input type="date" id="trip-date" class="form-control">
-                </div>
-                <div class="row justify-content-end">
-                    <button type="button" id="find-button" class="btn btn-dark mt-2 mr-4">Найти</button>
-                </div>
+                {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_row(form.source, {'attr': {'class': 'form-control source-select'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.destination, {'attr': {'class': 'form-control dest-select'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.date, {'attr': {'class': 'form-control trip-date'}}) }}
+                    </div>
+                    <div class="row justify-content-end">
+                        <button type="button" id="find-button" class="btn btn-dark mt-2 mr-4">Найти</button>
+                    </div>
+                {{ form_end(form) }}
             </div>
         </div>
         <div class="row justify-content-center">
@@ -39,9 +30,9 @@
 
 {% block javascripts %}
     <script>
-        let source = $('#source-select');
-        let destination = $('#dest-select');
-        let tripDate = $('#trip-date');
+        let source = $('.source-select');
+        let destination = $('.dest-select');
+        let tripDate = $('.trip-date');
         let findButton = $('#find-button');
         let foundedItemsContainer = $('#founded-items-container');
 
@@ -51,6 +42,7 @@
             let month = ("0" + (now.getMonth() + 1)).slice(-2);
             let today = now.getFullYear()+"-"+(month)+"-"+(day) ;
             tripDate.val(today);
+            loadAvailableTickets();
             findButton.click(function () {
                 loadAvailableTickets();
             });

@@ -1,35 +1,62 @@
 {% extends 'pages_template.html.twig' %}
 
+{% block page_title %}Персональная страница пользователя{% endblock %}
+
 {% block page_content %}
-    <div class="flex flex-cent-col">
-        <div class="page-title-container">
-            <h1 class="page-title-text">{{ app.user.surname }} {{ app.user.name }}</h1>
-            <p class="page-title-secondary-text"><p>При обращении в техническую поддержку используйте идентификатор аккаунта {{ app.user.id }}</p></p>
-        </div>
-        <div>
-
-        </div>
-    </div>
-    <div class="flex flex-cent-col">
-        <div class="module-container">
-            <h1 class="module-title">Персональные данные</h1>
-            <div class="module-data">
-                <ul>
-                    <li>Фамилия: {{ app.user.surname }}</li>
-                    <li>Имя: {{ app.user.name }}</li>
-                    <li>Отчество: {{ app.user.patronymic | default('не указано') }}</li>
-                    <li>Паспортные данные: {{ app.user.passportData }}</li>
-
-                    {% if benefits | length %}
-                        <li>Льготы: {{ benefits | join(',') }}</li>
-                    {% else %}
-                        <li>Нет льгот</li>
-                    {% endif %}
-
-                    <li>Количество бонусов: {{ bonuses | default(0) }}</li>
-                </ul>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <h3 class="text-center">{{ app.user.surname }} {{ app.user.name }}</h3>
+                <p class="text-center">При обращении в техническую поддержку используйте идентификатор аккаунта {{ app.user.id }}</p>
             </div>
-            <button type="button" class="btn btn-primary" onclick="location.href = '{{ path('edit_personal_data') }}'">Изменить</button>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h5 class="card-title">Персональные данные</h5>
+                        <ul>
+                            <li>Фамилия: {{ app.user.surname }}</li>
+                            <li>Имя: {{ app.user.name }}</li>
+                            <li>Отчество: {{ app.user.patronymic | default('не указано') }}</li>
+                            <li>Паспортные данные: {{ app.user.passportData }}</li>
+
+                            {% if benefits | length %}
+                                <li>Льготы: {{ benefits | join(',') }}</li>
+                            {% else %}
+                                <li>Нет льгот</li>
+                            {% endif %}
+
+                            <li>Количество бонусов: {{ bonuses | default(0) }}</li>
+                        </ul>
+                        <button type="button" class="btn btn-dark" onclick="location.href = '{{ path('edit_personal_data') }}'">Изменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-5 mt-5">
+            <div class="col-6">
+                <h3 class="text-center">Последние заказы пользователя</h3>
+                {% if ordersInfo | length %}
+                    {% for orderInfo in ordersInfo %}
+                        <div class="card mt-3 mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ orderInfo.voyage.name }}</h5>
+                                <ul>
+                                    <li>Статус: </li>
+                                    <li>Дата отправления: {{ orderInfo.voyage.departmentDate | date('Y-m-d') }}</li>
+                                    <li>Маршрут: {{ orderInfo.voyage.train.route }}</li>
+                                </ul>
+                                <a class="card-link" href="{{ path('ticket_full_page', {'id': orderInfo.id}) }}">Просмотр</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h3 class="text-center">В истории заказов нет записей</h3>
+                    <div class="row justify-content-center">
+                        <button class="btn btn-dark bnt-lg" onclick="window.location.href = '/find-voyages'">Купить билет</button></div>
+                {% endif %}
+            </div>
         </div>
     </div>
 

@@ -1,0 +1,62 @@
+{% extends 'pages_template.html.twig' %}
+
+{% block page_title %}Мониторинг поездов{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <p class="text-center">Выберите параметры отправления</p>
+            <div class="row justify-content-center">
+                {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+                {{ form_widget(form.date, {'attr': {'class': 'form-control mr-3'}}) }}
+                {{ form_widget(form.train, {'attr': {'class': 'form-control mr-3'}}) }}
+                {{ form_widget(form.count, {'attr': {'class': 'form-control mr-3'}}) }}
+                {{ form_widget(form.submit, {'attr': {'class': 'btn btn-dark'}}) }}
+                {{ form_end(form) }}
+            </div>
+            <p class="text-center">или добавьте новое</p>
+            <div class="row justify-content-center">
+                {{ form_start(addMonitoringForm, {'attr': {'class': 'form-inline'}}) }}
+                {{ form_widget(addMonitoringForm.submit, {'attr': {'class': 'btn btn-dark'}}) }}
+                {{ form_end(addMonitoringForm) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5 mb-5">
+
+        <div class="col-8">
+            {% if monitoringHistory | length %}
+                <p class="text-center mb-3">Найдено результатов: {{ monitoringHistory | length }}</p>
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Время</th>
+                        <th scope="col">Местоположение</th>
+                        <th scope="col">Номер поезда</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Тип поезда</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for monitoring in monitoringHistory %}
+                        <tr>
+                            <th scope="row">{{ monitoring.id }}</th>
+                            <td>{{ monitoring.time | date('Y-m-d') }}</td>
+                            <td>{{ monitoring.location }}</td>
+                            <td>{{ monitoring.train.id }}</td>
+                            <td>{{ monitoring.train.route }}</td>
+                            <td>{{ monitoring.train.trainType }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <h3 class="text-center">Ничего не найдено</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

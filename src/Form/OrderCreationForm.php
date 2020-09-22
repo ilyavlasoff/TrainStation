@@ -41,6 +41,7 @@ class OrderCreationForm extends AbstractType {
             ->add('submit', SubmitType::class, [
                 'label' => 'Создать заказ'
             ]);
+        $builder->get('wagonNumber')->resetViewTransformers();
     }
 
     public function configureOptions(OptionsResolver $resolver)

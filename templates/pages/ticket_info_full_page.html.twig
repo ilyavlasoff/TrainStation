@@ -1,22 +1,43 @@
 {% extends 'pages_template.html.twig' %}
 
+{% block page_title %}Информация о билете{% endblock %}
 {% block page_content %}
-    <div class="flex flex-cent-col">
-        <div class="page-title-container">
-            <h1 class="page-title-text">Информация о билете</h1>
-            <p class="page-title-secondary-text">Идентификатор билета: {{ ticket.id }}</p>
-        </div>
-        <div>
-            <div>
-                <p>Станция отправления: {{ ticket.sourceStation.address }}</p>
-                <p>Станция назначения: {{ ticket.destinationStation.address }}</p>
-                <p>Протяженность пути: {{ ticket.routeLength }}</p>
+    <div class="container">
+        <p class="text-center">Идентификатор билета: {{ ticket.id }}</p>
+        <div class="row justify-content-center">
+            <div class="card col-5 mt-5">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о маршруте</h5>
+                    <p class="card-text">Станция отправления: {{ ticket.sourceStation.address }}</p>
+                    <p class="card-text">Станция назначения: {{ ticket.destinationStation.address }}</p>
+                    <p class="card-text">Протяженность пути: {{ ticket.routeLength }}</p>
+                </div>
             </div>
-            <div>
-                <p>Идентификатор поезда: {{ train.id }}</p>
-                <p>Тип поезда: {{ train.trainType }}</p>
-                <p>Время отправления: {{ voyage.departmentDate | date('Y-m-d') }}</p>
+            <div class="card col-5 ml-3 mt-5">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о поезде</h5>
+                    <p class="card-text">Идентификатор поезда: {{ train.id }}</p>
+                    <p class="card-text">Тип поезда: {{ train.trainType }}</p>
+                    <p class="card-text">Время отправления: {{ voyage.departmentDate | date('Y-m-d') }}</p>
+                </div>
+            </div>
+            <div class="card col-5 mt-5 mb-5">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о пассажире</h5>
+                    <p class="card-text">ФИО пассажира: {{ ticket.user.surname ~ ' ' ~ ticket.user.name ~ ' ' ~ ticket.user.patronymic }}</p>
+                    <p class="card-text">Паспортные данные: {{ ticket.user.passportData }}</p>
+                    <p class="card-text">E-mail: {{ ticket.user.email }}</p>
+                </div>
+            </div>
+            <div class="card col-5 ml-3 mt-5 mb-5">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о месте</h5>
+                    <p class="card-text">Номер вагона: {{ ticket.wagon.id }}</p>
+                    <p class="card-text">Тип вагона: {{ ticket.wagon.type.typeDescription }}</p>
+                    <p class="card-text">Место: {{ ticket.place }}</p>
+                </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
